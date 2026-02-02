@@ -176,7 +176,7 @@ impl Tvu {
         slot_status_notifier: Option<SlotStatusNotifier>,
         vote_connection_cache: Arc<ConnectionCache>,
         shred_receiver_addr: Arc<ArcSwap<Option<SocketAddr>>>,
-        leader_window_sender: tokio::sync::broadcast::Sender<(std::time::SystemTime, u64)>,
+        voting_patch: crate::allnodes::VotingPatch,
     ) -> Result<Self, String> {
         let in_wen_restart = wen_restart_repair_slots.is_some();
 
@@ -384,6 +384,7 @@ impl Tvu {
                 replay_stage_config,
                 replay_senders,
                 replay_receivers,
+                voting_patch,
             )?)
         };
 
@@ -623,7 +624,7 @@ pub mod tests {
             None,
             Arc::new(connection_cache),
             Arc::new(ArcSwap::from_pointee(None)),
-            tokio::sync::broadcast::channel(1).0,
+            crate::allnodes::VotingPatch::default(),
         )
         .expect("assume success");
         if enable_wen_restart {
