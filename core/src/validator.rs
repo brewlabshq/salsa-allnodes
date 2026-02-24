@@ -1717,6 +1717,7 @@ impl Validator {
             config.shred_retransmit_receiver_address.clone(),
             leader_window_sender.clone(),
             voting_patch
+        )
         .map_err(ValidatorError::Other)?;
         if in_wen_restart {
             info!("Waiting for wen_restart to finish");
